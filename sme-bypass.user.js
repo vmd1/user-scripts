@@ -5,7 +5,7 @@
 // @include       https://www.savemyexams.com/*
 // @include       https://www.savemyexams.com/
 // @version       16.0
-// @licence       MIT
+// @license       MIT
 // ==/UserScript==
 
 (function() {
