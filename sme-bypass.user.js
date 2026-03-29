@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name          SaveMyExams Bypass
-// @namespace     http://vmd1.dev/userscripts
-// @description   Bypasses SaveMyExams paywalls
-// @include       https://www.savemyexams.com/*
-// @include       https://www.savemyexams.com/
-// @version       16.0
-// @license       MIT
+// @name            SaveMyExams Bypass
+// @namespace       http://vmd1.dev/userscripts
+// @description     Bypasses SaveMyExams paywalls
+// @version         16.0
+// @license         MIT
+// @match           https://www.savemyexams.com/*
+// @grant           none
 // ==/UserScript==
 
 (function() {
