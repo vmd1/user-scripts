@@ -1,10 +1,17 @@
+// ==UserScript==
+// @name          SaveMyExams Bypass
+// @namespace     http://vmd1.dev/userscripts
+// @description   Bypasses SaveMyExams paywalls
+// @include       https://www.savemyexams.com/*
+// @include       https://www.savemyexams.com/
+// @version       16.0
+// @icon          https://cdn.savemyexams.com/favicon/favicon.ico
+// ==/UserScript==
+
 (function() {
-    // --- CONFIGURATION & STATE ---
     const CDN_BASE = "https://cdn.savemyexams.com/pdfs/";
     let currentIdOnly = "";
     let pageData = null;
-
-    // 1. DATA INITIALIZATION
     function syncPageData() {
         try {
             const nextData = JSON.parse(document.getElementById('__NEXT_DATA__').innerHTML);
@@ -15,8 +22,6 @@
             console.warn("SME Proxy: Could not sync initial page data.");
         }
     }
-
-    // 2. STORAGE CLEANUP
     function clearLocalStorage() {
         const items = [
             "SME.topic-question-part-solution-views", "SME.revision-note-views",
@@ -27,8 +32,6 @@
         ];
         items.forEach(item => localStorage.removeItem(item));
     }
-
-    // 3. UI: SOLUTION MODAL INJECTION
     function injectSolutionModal() {
         if (document.getElementById('custom-solution-modal')) return;
 
@@ -51,8 +54,6 @@
             document.getElementById('custom-solution-modal').style.display = 'none';
         };
     }
-
-    // 4. SOLUTION CRAWLER & PARSER
     function findById(obj, targetId) {
         if (!obj || typeof obj !== 'object') return null;
         if ((obj.id === targetId || obj.marking_guidance_id === targetId) && obj.solution) return obj;
@@ -64,7 +65,6 @@
         }
         return null;
     }
-
     const parseNode = (node) => {
         if (!node) return '';
         if (node.type === 'text') {
@@ -93,8 +93,6 @@
             default: return children;
         }
     };
-
-    // 5. DOWNLOAD BUTTON UNLOCKER
     function nukeAndReplaceButton(id) {
         if (!id) return;
         const oldBtn = document.querySelector('button[aria-label="Download notes"]:not([data-unlocked])');
@@ -113,8 +111,6 @@
             if (oldBtn.parentNode) oldBtn.parentNode.replaceChild(newBtn, oldBtn);
         }
     }
-
-    // 6. UI CLEANUP (Targeting Limit-Wall and Blur elements)
     function cleanUp() {
         nukeAndReplaceButton(currentIdOnly);
         injectSolutionModal();
@@ -129,9 +125,7 @@
             '[class*="FeatureSliderCTA_"]',   
             'div.DownloadRibbon_wrapper__so48d'
         ];
-        
         const targets = document.querySelectorAll(selectors.join(', '));
-        
         targets.forEach(el => {
             if (el.id === 'custom-solution-modal' || el.contains(document.getElementById('custom-solution-modal'))) {
                 return;
@@ -144,8 +138,6 @@
             document.body.classList.remove('modal-open');
         }
     }
-
-    // 7. EVENT INTERCEPTORS (Clicks & Fetch)
     window.onclick = (e) => {
         const btn = e.target.closest('button');
         if (btn && btn.innerText.toLowerCase().includes('view answer')) {
@@ -200,8 +192,6 @@
         };
         window._fetchPatched = true;
     }
-
-    // 8. INITIALIZE
     syncPageData();
     clearLocalStorage();
     if (document.readyState === 'loading') {
@@ -215,6 +205,5 @@
         clearLocalStorage();
     });
     observer.observe(document.body, { childList: true, subtree: true });
-
-    console.log("%c📊 SME PROXY V16", "color:white; background:#6366f1; padding:10px; font-weight:bold; border-radius:5px;");
+    console.log("%c SaveMyExams Bypass V16: Active", "color:white; background:#6366f1; padding:10px; font-weight:bold; border-radius:5px;");
 })();
